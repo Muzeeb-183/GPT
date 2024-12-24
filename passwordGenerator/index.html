@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Generator</title>
+    <style>
+        * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f4f8;
+    font-family: Arial, sans-serif;
+}
+
+.password-generator {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 300px;
+    transition: all 0.3s ease-in-out;
+}
+
+.password-generator:hover {
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    transform: translateY(-5px);
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    text-align: center;
+}
+
+input[type="range"] {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.checkbox-group label {
+    display: block;
+    margin: 5px 0;
+}
+
+button {
+    padding: 10px 15px;
+    font-size: 16px;
+    color: #ffffff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+    </style>
+</head>
+<body>
+    <div class="password-generator">
+        <h2>Password Generator</h2>
+        <input type="text" id="password" readonly placeholder="Your password will appear here">
+        
+        <label for="lengthRange">Password Length: <span id="lengthValue">16</span></label>
+        <input type="range" id="lengthRange" min="1" max="30" value="16">
+        
+        <div class="checkbox-group">
+            <label><input type="checkbox" id="lowercase"> Include lowercase (a-z)</label>
+            <label><input type="checkbox" id="uppercase"> Include uppercase (A-Z)</label>
+            <label><input type="checkbox" id="numbers"> Include numbers (0-9)</label>
+            <label><input type="checkbox" id="symbols"> Include symbols (@-*)</label>
+        </div>
+        
+        <button id="generateBtn">Generate Password</button>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+    const passwordInput = document.getElementById('password');
+    const lengthRange = document.getElementById('lengthRange');
+    const lengthValue = document.getElementById('lengthValue');
+    const lowercaseCheckbox = document.getElementById('lowercase');
+    const uppercaseCheckbox = document.getElementById('uppercase');
+    const numbersCheckbox = document.getElementById('numbers');
+    const symbolsCheckbox = document.getElementById('symbols');
+    const generateBtn = document.getElementById('generateBtn');
+
+    // Update the password length display
+    lengthRange.addEventListener('input', () => {
+        lengthValue.textContent = lengthRange.value;
+    });
+
+    // Generate password based on selected options
+    generateBtn.addEventListener('click', () => {
+        const length = parseInt(lengthRange.value);
+        const includeLowercase = lowercaseCheckbox.checked;
+        const includeUppercase = uppercaseCheckbox.checked;
+        const includeNumbers = numbersCheckbox.checked;
+        const includeSymbols = symbolsCheckbox.checked;
+
+        passwordInput.value = generatePassword(length, includeLowercase, includeUppercase, includeNumbers, includeSymbols);
+    });
+
+    // Function to generate password
+    function generatePassword(length, lowercase, uppercase, numbers, symbols) {
+        const lowercaseChars = "abcdefghijklmnopqrstuvwxyz";
+        const uppercaseChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const numberChars = "0123456789";
+        const symbolChars = "@#$%^&*()_+{}[]<>?!";
+
+        let charSet = "";
+        if (lowercase) charSet += lowercaseChars;
+        if (uppercase) charSet += uppercaseChars;
+        if (numbers) charSet += numberChars;
+        if (symbols) charSet += symbolChars;
+
+        let password = "";
+        for (let i = 0; i < length; i++) {
+            const randomIndex = Math.floor(Math.random() * charSet.length);
+            password += charSet.charAt(randomIndex);
+        }
+        return password || "Select options";
+    }
+});
+
+    </script>
+</body>
+</html>

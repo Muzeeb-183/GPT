@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Meta Tags for proper structure and SEO -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A simple and accessible calculator app built using best practices.">
+    <meta name="author" content="Your Name">
+    <meta name="robots" content="index, follow">
+
+    <title>Calculator App</title>
+
+    <style>
+        /* Root Variables for Consistency */
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #f5f5f5;
+            --accent-color: #ffffff;
+            --text-color: #333333;
+            --button-color: #f1f1f1;
+            --button-hover: #e0e0e0;
+            --font-family: 'Arial', sans-serif;
+            --border-radius: 10px;
+            --transition-speed: 0.3s;
+        }
+
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            flex-direction: column;
+            padding: 20px;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        /* Header Styling */
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+            animation: fadeIn 1s ease-out;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        /* Calculator Container */
+        .calculator {
+            background-color: var(--accent-color);
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            width: 100%;
+            max-width: 380px;
+            animation: slideUp 0.5s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0 auto;
+        }
+
+        /* Display */
+        .calculator-display {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        #display {
+            width: 100%;
+            padding: 15px;
+            font-size: 2rem;
+            border: 2px solid var(--primary-color);
+            border-radius: var(--border-radius);
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            text-align: right;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Button Container */
+        .calculator-buttons {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            max-width: 360px;
+            margin: 0 auto;
+        }
+
+        /* Button Styling */
+        .btn {
+            background-color: var(--button-color);
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: background-color var(--transition-speed), transform var(--transition-speed);
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 60px;
+        }
+
+        .btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px var(--primary-color);
+        }
+
+        .btn:hover {
+            background-color: var(--button-hover);
+            transform: scale(1.05);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Specific Button Colors */
+        #clear {
+            background-color: #f44336;
+            color: white;
+        }
+
+        #equals {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        #add,
+        #subtract,
+        #multiply,
+        #divide {
+            background-color: #f0f0f0;
+        }
+
+        /* Footer Styling */
+        footer {
+            margin-top: 30px;
+            font-size: 1rem;
+            text-align: center;
+            color: #777;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Mobile (portrait) */
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 1.6rem;
+            }
+
+            .calculator {
+                padding: 15px;
+                max-width: 100%;
+                margin: 0 auto;
+                /* Center calculator */
+            }
+
+            #display {
+                font-size: 2.2rem;
+                padding: 20px;
+            }
+
+            .calculator-buttons {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 8px;
+                max-width: 100%;
+                /* Ensure no overflow */
+            }
+
+            .btn {
+                padding: 18px;
+                font-size: 1.4rem;
+                height: 55px;
+                /* Slightly smaller height for mobile */
+            }
+
+            footer {
+                font-size: 0.9rem;
+                margin-top: 20px;
+            }
+        }
+
+        /* Tablets (portrait) */
+        @media (max-width: 768px) {
+            .calculator {
+                width: 90%;
+                padding: 20px;
+            }
+
+            #display {
+                font-size: 2.4rem;
+                padding: 25px;
+            }
+
+            .calculator-buttons {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 12px;
+            }
+
+            .btn {
+                padding: 20px;
+                font-size: 1.6rem;
+            }
+
+            footer {
+                font-size: 1rem;
+            }
+        }
+
+        /* Tablets and Laptops (landscape) */
+        @media (max-width: 1024px) {
+            .calculator {
+                width: 80%;
+                padding: 25px;
+            }
+
+            #display {
+                font-size: 2.6rem;
+            }
+
+            .calculator-buttons {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 15px;
+            }
+
+            .btn {
+                padding: 22px;
+                font-size: 1.8rem;
+            }
+
+            footer {
+                font-size: 1rem;
+            }
+        }
+
+        /* Laptops and larger screens */
+        @media (min-width: 1025px) {
+            .calculator {
+                width: 320px;
+            }
+        }
+    </style>
+    <!-- Favicon for better user experience -->
+    <link rel="icon" href="images/calculator.avif" type="image/x-icon">
+</head>
+
+<body>
+
+    <header>
+        <h1>Calculator App</h1>
+    </header>
+
+    <main>
+        <section class="calculator" aria-labelledby="calculator">
+            <!-- Calculator display (Screen) -->
+            <div class="calculator-display">
+                <input type="text" id="display" disabled aria-live="polite" aria-label="Calculator display"
+                    role="screen">
+            </div>
+
+            <!-- Buttons for the calculator -->
+            <div class="calculator-buttons">
+                <button class="btn" id="clear" aria-label="Clear display">C</button>
+                <button class="btn" id="divide" aria-label="Divide">/</button>
+                <button class="btn" id="multiply" aria-label="Multiply">*</button>
+                <button class="btn" id="subtract" aria-label="Subtract">-</button>
+
+                <button class="btn" id="7" aria-label="7">7</button>
+                <button class="btn" id="8" aria-label="8">8</button>
+                <button class="btn" id="9" aria-label="9">9</button>
+                <button class="btn" id="add" aria-label="Add">+</button>
+
+                <button class="btn" id="4" aria-label="4">4</button>
+                <button class="btn" id="5" aria-label="5">5</button>
+                <button class="btn" id="6" aria-label="6">6</button>
+                <button class="btn" id="equals" aria-label="Equals">=</button>
+
+                <button class="btn" id="1" aria-label="1">1</button>
+                <button class="btn" id="2" aria-label="2">2</button>
+                <button class="btn" id="3" aria-label="3">3</button>
+                <button class="btn" id="decimal" aria-label="Decimal">.</button>
+
+                <button class="btn" id="0" aria-label="0">0</button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Calculator App. All Rights Reserved.</p>
+    </footer>
+
+    <!-- External JavaScript for performance optimization -->
+    <script src="script.js" defer></script>
+
+</body>
+<script>
+    // Select elements
+    const display = document.getElementById('display');
+    const buttons = document.querySelectorAll('.btn');
+
+    // Variables to hold current input and the operator
+    let currentInput = '';
+    let previousInput = '';
+    let operator = '';
+
+    // Function to update the display
+    const updateDisplay = (value) => {
+        display.value = value;
+    };
+
+    // Function to handle number buttons
+    const handleNumberClick = (num) => {
+        currentInput += num;
+        updateDisplay(currentInput);
+    };
+
+    // Function to handle operator buttons
+    const handleOperatorClick = (op) => {
+        if (currentInput === '') return; // Prevent operator click without number
+        if (previousInput !== '') {
+            calculate(); // Perform calculation if there's already a previous input
+        }
+        operator = op;
+        previousInput = currentInput;
+        currentInput = '';
+    };
+
+    // Function to perform calculation
+    const calculate = () => {
+        if (previousInput === '' || currentInput === '') return;
+        let result;
+        const prev = parseFloat(previousInput);
+        const current = parseFloat(currentInput);
+
+        switch (operator) {
+            case '+':
+                result = prev + current;
+                break;
+            case '-':
+                result = prev - current;
+                break;
+            case '*':
+                result = prev * current;
+                break;
+            case '/':
+                if (current === 0) {
+                    result = 'Error';
+                } else {
+                    result = prev / current;
+                }
+                break;
+            default:
+                return;
+        }
+
+        // Display result and reset for next operation
+        updateDisplay(result);
+        currentInput = result.toString();
+        previousInput = '';
+        operator = '';
+    };
+
+    // Function to clear the display
+    const clearDisplay = () => {
+        currentInput = '';
+        previousInput = '';
+        operator = '';
+        updateDisplay('');
+    };
+
+    // Function to handle decimal point
+    const handleDecimal = () => {
+        if (!currentInput.includes('.')) {
+            currentInput += '.';
+            updateDisplay(currentInput);
+        }
+    };
+
+    // Add event listeners for buttons
+    buttons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            const buttonText = e.target.innerText;
+
+            if (buttonText === 'C') {
+                clearDisplay();
+            } else if (buttonText === '=') {
+                calculate();
+            } else if (['+', '-', '*', '/'].includes(buttonText)) {
+                handleOperatorClick(buttonText);
+            } else if (buttonText === '.') {
+                handleDecimal();
+            } else {
+                handleNumberClick(buttonText);
+            }
+        });
+    });
+
+    // Event listener for keyboard input (optional for better user experience)
+    document.addEventListener('keydown', (e) => {
+        if ('0123456789'.includes(e.key)) {
+            handleNumberClick(e.key);
+        } else if (['+', '-', '*', '/'].includes(e.key)) {
+            handleOperatorClick(e.key);
+        } else if (e.key === 'Enter' || e.key === '=') {
+            calculate();
+        } else if (e.key === 'Backspace') {
+            clearDisplay();
+        } else if (e.key === '.') {
+            handleDecimal();
+        }
+    });
+
+</script>
+
+</html>

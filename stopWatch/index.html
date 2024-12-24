@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stopwatch</title>
+  <style>
+    /* styles.css */
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f0f8ff;
+}
+
+.stopwatch-card {
+  text-align: center;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 200px;
+}
+
+#timer {
+  font-size: 2em;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.buttons button {
+  padding: 10px 20px;
+  margin: 5px;
+  font-size: 1em;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#startBtn {
+  background-color: #4CAF50;
+  color: white;
+}
+
+#stopBtn {
+  background-color: #f44336;
+  color: white;
+}
+
+#restartBtn {
+  background-color: #008cba;
+  color: white;
+}
+
+.buttons button:hover {
+  opacity: 0.8;
+}
+
+  </style>
+</head>
+<body>
+  <div class="stopwatch-card">
+    <div id="timer">00:00:00</div>
+    <div class="buttons">
+      <button id="startBtn">Start</button>
+      <button id="stopBtn">Stop</button>
+      <button id="restartBtn">Restart</button>
+    </div>
+  </div>
+  <script>
+    // script.js
+
+let milliseconds = 0;
+let seconds = 0;
+let minutes = 0;
+let timerInterval;
+
+const timerDisplay = document.getElementById("timer");
+const startButton = document.getElementById("startBtn");
+const stopButton = document.getElementById("stopBtn");
+const restartButton = document.getElementById("restartBtn");
+
+// Function to start the timer
+function startTimer() {
+  timerInterval = setInterval(() => {
+    milliseconds += 1;
+    if (milliseconds === 60) {
+      milliseconds = 0;
+      seconds += 1;
+    }
+    if (seconds === 60) {
+      seconds = 0;
+      minutes += 1;
+    }
+    updateDisplay();
+  }, 16); // Roughly every 16ms for smoother milliseconds update
+}
+
+// Function to stop the timer
+function stopTimer() {
+  clearInterval(timerInterval);
+}
+
+// Function to reset the timer
+function resetTimer() {
+  clearInterval(timerInterval);
+  milliseconds = 0;
+  seconds = 0;
+  minutes = 0;
+  updateDisplay();
+}
+
+// Function to update the display
+function updateDisplay() {
+  const formattedTime = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}:${String(milliseconds).padStart(2, '0')}`;
+  timerDisplay.innerText = formattedTime;
+}
+
+// Event listeners for the buttons
+startButton.addEventListener("click", startTimer);
+stopButton.addEventListener("click", stopTimer);
+restartButton.addEventListener("click", resetTimer);
+
+  </script>
+</body>
+</html>

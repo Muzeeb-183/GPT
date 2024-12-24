@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator</title>
+    <style>
+        /* styles.css */
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f8ff;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.qr-card {
+    text-align: center;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    width: 300px;
+    animation: fadeIn 0.5s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+input {
+    width: calc(100% - 20px);
+    padding: 10px;
+    border: 2px solid #4CAF50;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+.buttons button {
+    padding: 10px 15px;
+    margin: 5px;
+    font-size: 1em;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+#generateBtn {
+    background-color: #4CAF50;
+    color: white;
+}
+
+#downloadBtn {
+    background-color: #008cba;
+    color: white;
+}
+
+.buttons button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+}
+
+.qr-code {
+    margin-top: 20px;
+}
+
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://davidshimjs.github.io/qrcodejs/qrcode.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="qr-card">
+            <h1>QR Code Generator</h1>
+            <input type="text" id="urlInput" placeholder="Enter URL here" />
+            <div class="buttons">
+                <button id="generateBtn">Generate</button>
+                <button id="downloadBtn" disabled>Download</button>
+            </div>
+            <div id="qrCodeContainer" class="qr-code"></div>
+        </div>
+    </div>
+   <script>
+    // script.js
+
+const urlInput = document.getElementById("urlInput");
+const generateBtn = document.getElementById("generateBtn");
+const downloadBtn = document.getElementById("downloadBtn");
+const qrCodeContainer = document.getElementById("qrCodeContainer");
+
+// Function to generate QR Code
+function generateQRCode() {
+    const url = urlInput.value.trim();
+    if (!url) {
+        alert("Please enter a valid URL.");
+        return;
+    }
+
+    // Clear the previous QR code
+    qrCodeContainer.innerHTML = '';
+
+    const qrCode = new QRCode(qrCodeContainer, {
+        text: url,
+        width: 128,
+        height: 128,
+        correctLevel: QRCode.CorrectLevel.H,
+    });
+
+    downloadBtn.disabled = false; // Enable download button
+}
+
+// Function to download QR Code
+function downloadQRCode() {
+    const canvas = qrCodeContainer.querySelector("canvas");
+    if (canvas) {
+        const link = document.createElement("a");
+        link.href = canvas.toDataURL("image/png");
+        link.download = "qr_code.png";
+        link.click();
+    } else {
+        alert("Please generate a QR code first.");
+    }
+}
+
+// Event listeners
+generateBtn.addEventListener("click", generateQRCode);
+downloadBtn.addEventListener("click", downloadQRCode);
+
+   </script>
+</body>
+</html>

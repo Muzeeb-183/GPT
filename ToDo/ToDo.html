@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f8ff;
+          /*  height: 10vh; /*Full height for centering */
+            padding: 20px; /*Padding to prevent content from touching edges on mobile*/
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 100%; /* Full width for mobile */
+            max-width: 600px; /* Maximum width for larger screens */
+            text-align: center;
+        }
+
+        .input-container {
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        input[type="text"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: 2px solid #4CAF50;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px 15px;
+            margin-left: 5px;
+            margin-block: 15px;
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #45a049, #4CAF50);
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        .todolists {
+            list-style: none;
+        }
+
+        .todolists li {
+            background-color: #f2f2f2;
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .todolists li:hover {
+            background-color: #e0e0e0;
+        }
+
+        .deleteBtn {
+            margin-right: 10px;
+        }
+
+        .About {
+            height: 50px;
+            width: 50px;
+            padding: 5px;
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            border-radius: 50%;
+            background-color: pink;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .About .dropdown {
+            position: absolute;
+            top: 60px;
+            left: 0;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 100px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: none;
+        }
+
+        .About .dropdown ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .About .dropdown ul li {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .About .dropdown ul li:hover {
+            background-color: #f0f0f0;
+        }
+
+        .Time {
+            height: 60px;
+            width: 110px;
+            padding: 5px;
+            position: absolute;
+            right: 10px; /* Adjusted for mobile */
+            top: 10px; /* Adjusted for mobile */
+            border-radius: 30%;
+            background-color: #45a049;
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        .todolists li.completed p {
+            text-decoration: line-through;
+            color: #808080;
+        }
+
+        /* Media Queries for responsiveness */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px; /* Reduce padding on smaller screens */
+            }
+
+            .container {
+                padding: 15px; /* Reduce padding in the container */
+            }
+
+            input[type="text"] {
+                font-size: 14px; /* Smaller input text size */
+            }
+
+            button {
+                padding: 8px 10px; /* Smaller button padding */
+                font-size: 0.8rem; /* Smaller button font size */
+            }
+
+            .Time {
+                width: auto; /* Allow time display to adjust */
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>ToDoList</title>
+</head>
+
+<body>
+    <div class="Time"></div>
+    <div class="About">
+        <div class="dropdown">
+            <ul>
+                <li id="myTodos">My TODO's</li>
+                <li id="nameOption">Name</li>
+            </ul>
+        </div>
+        <div class="initials" style="font-size: 24px;"></div>
+    </div>
+    <div class="container">
+        <div class="input-container">
+            <h1>My To Do List</h1>
+            <input type="text" placeholder="Add a new to do" id="inputBox">
+            <button id="addBtn">Add</button>
+        </div>
+        <ul class="todolists" id="todolists"></ul>
+    </div>
+    <script>
+        const inputBox = document.querySelector('#inputBox');
+        const addBtn = document.querySelector('#addBtn');
+        const todolists = document.querySelector('#todolists');
+        const aboutDiv = document.querySelector('.About');
+        const dropdown = aboutDiv.querySelector('.dropdown');
+        const nameOption = document.getElementById('nameOption');
+        const initialsDiv = document.querySelector('.initials');
+
+        let editTodo = null;
+
+        const addTodo = () => {
+            const inputText = inputBox.value.trim();
+            if (inputText === "") {
+                alert('Write something in the list');
+                return;
+            }
+
+            // If editing, update the text in place
+            if (addBtn.innerText === "Edit") {
+                const oldText = editTodo.target.closest('li').querySelector('p').innerText;
+                editLocaltodo(oldText, inputText);
+                editTodo.target.closest('li').querySelector('p').innerText = inputText;
+                addBtn.innerText = 'Add';
+                inputBox.value = "";
+                editTodo = null;
+                return;
+            }
+
+            // Create to-do item with text and timestamp button
+            const li = document.createElement('li');
+            const p = document.createElement('p');
+            p.innerText = inputText;
+            li.appendChild(p);
+
+            // Timestamp button
+            const timestampBtn = document.createElement('button');
+            timestampBtn.classList.add('addedAt', 'btn');
+            const timestamp = new Date().toLocaleString('en-GB'); // Get constant timestamp
+            timestampBtn.innerHTML = `<small>${timestamp}</small>`;
+            li.appendChild(timestampBtn);
+
+            // Remove button
+            const deleteBtn = document.createElement('button');
+            deleteBtn.classList.add('deleteBtn', 'btn');
+            deleteBtn.innerText = 'Remove';
+            li.appendChild(deleteBtn);
+
+            // Edit button
+            const editBtn = document.createElement('button');
+            editBtn.classList.add('editBtn', 'btn');
+            editBtn.innerText = 'Edit';
+            li.appendChild(editBtn);
+            
+            //complete button
+            const completeBtn = document.createElement('button');
+            completeBtn.classList.add('completeBtn', 'btn');
+            completeBtn.innerText = 'Complete';
+            li.appendChild(completeBtn);
+
+            todolists.prepend(li);
+            inputBox.value = "";
+
+            // Save new todo as an object in localStorage with text and timestamp
+            saveLocalTodos({ text: inputText, timestamp,completed: false });
+        };
+
+        // Update the updateTodo function to get the correct text element
+        const updateTodo = (e) => {
+            if (e.target.classList.contains('deleteBtn')) {
+                todolists.removeChild(e.target.closest('li'));
+                deleteLocaltodo(e.target.closest('li'));
+            } else if (e.target.classList.contains('editBtn')) {
+                // Set input value to the to-do text only
+                inputBox.value = e.target.closest('li').querySelector('p').innerText;
+                inputBox.focus();
+                addBtn.innerText = "Edit";
+                editTodo = e;
+            } else if (e.target.classList.contains('completeBtn')) {
+                const li = e.target.closest('li');
+                li.classList.toggle('completed');
+                const todoText = li.querySelector('p').innerText;
+                toggleCompleteStatus(todoText);
+            }
+        };
+
+        const saveLocalTodos = (todo) => {
+            const todos = JSON.parse(localStorage.getItem('todos')) || [];
+            todos.push(todo);
+            localStorage.setItem('todos', JSON.stringify(todos));
+        };
+
+        const getLocaltodo = () => {
+            const todos = JSON.parse(localStorage.getItem('todos')) || [];
+            todos.forEach(({ text, timestamp, completed }) => {
+                const li = document.createElement('li');
+                li.classList.add('todo-item');
+                if (completed) li.classList.add('completed');
+
+                const p = document.createElement('p');
+                p.innerText = text;
+                li.appendChild(p);
+
+                // Timestamp button with constant value
+                const timestampBtn = document.createElement('button');
+                timestampBtn.classList.add('addedAt', 'btn');
+                timestampBtn.innerHTML = `<small>${timestamp}</small>`;
+                li.appendChild(timestampBtn);
+
+                const completeBtn = document.createElement('button');
+                completeBtn.classList.add('completeBtn', 'btn');
+                completeBtn.innerText = 'Complete';
+                li.appendChild(completeBtn);
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.classList.add('deleteBtn', 'btn');
+                deleteBtn.innerText = 'Remove';
+                li.appendChild(deleteBtn);
+
+                const editBtn = document.createElement('button');
+                editBtn.classList.add('editBtn', 'btn');
+                editBtn.innerText = 'Edit';
+                li.appendChild(editBtn);
+
+                todolists.prepend(li);
+            });
+        };
+
+
+        // Updated deleteLocaltodo to locate by text property
+        const deleteLocaltodo = (todo) => {
+            let todos = JSON.parse(localStorage.getItem('todos')) || [];
+            const todoText = todo.querySelector('p').innerText;
+            todos = todos.filter(t => t.text !== todoText); // Filter out by text property
+            localStorage.setItem('todos', JSON.stringify(todos));
+        };
+
+
+        const editLocaltodo = (oldTodoText, newTodoText) => {
+            let todos = JSON.parse(localStorage.getItem('todos')) || [];
+            const todoIndex = todos.findIndex(t => t.text === oldTodoText);
+            if (todoIndex > -1) {
+                todos[todoIndex].text = newTodoText; // Update only the text property
+                localStorage.setItem('todos', JSON.stringify(todos));
+            }
+        };
+
+        const toggleCompleteStatus = (text) => {
+            const todos = JSON.parse(localStorage.getItem('todos')) || [];
+            todos.forEach(todo => {
+                if (todo.text === text) {
+                    todo.completed = !todo.completed;
+                }
+            });
+            localStorage.setItem('todos', JSON.stringify(todos));
+        };
+
+        addBtn.addEventListener('click', addTodo);
+        todolists.addEventListener('click', updateTodo);
+        document.addEventListener('DOMContentLoaded', getLocaltodo);
+
+        // Function to toggle dropdown visibility
+        aboutDiv.addEventListener('click', () => {
+            dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+        });
+
+        const getInitials = (name) => {
+            const names = name.trim().split(" ");
+            return names.length === 1 ? names[0][0].toUpperCase() : names[0][0].toUpperCase() + names[1][0].toUpperCase();
+        };
+
+        const storeName = (name) => {
+            localStorage.setItem('userName', name);
+            const initials = getInitials(name);
+            initialsDiv.textContent = initials; // Display initials in the pink div
+        };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const storedName = localStorage.getItem('userName');
+            if (storedName) {
+                initialsDiv.textContent = getInitials(storedName);
+            }
+        });
+
+        nameOption.addEventListener('click', () => {
+            const name = prompt("Enter your name:");
+            if (name) {
+                storeName(name);
+            }
+        });
+
+        // Hide dropdown when clicking outside
+        window.addEventListener('click', (event) => {
+            if (!aboutDiv.contains(event.target)) {
+                dropdown.style.display = 'none';
+            }
+        });
+
+        // Display time and date in the top right corner
+        const Time = document.querySelector('.Time');
+        setInterval(() => {
+            let now = new Date();
+            let timeStr = now.toLocaleTimeString();
+            let dateStr = now.toLocaleDateString('en-GB'); // day-month-year format
+            Time.innerHTML = `${timeStr}<br>${dateStr}`;
+        }, 1000);
+    </script>
+</body>
+
+</html>
